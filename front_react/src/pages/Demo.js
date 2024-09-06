@@ -1,6 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const Demo = () => {
+function Demo() {
+  const [data, setData] = useState([]);
+
+  const getData = async () => {
+    try {
+        const gettable = await axios.get('http://localhost:5000/table');
+        if (gettable.status === 200 || gettable.status === 201) {
+            setData(gettable.data);
+            console.log(gettable.data);
+        } else {
+            console.error("Unexpected status code:", gettable.status);
+            alert(`Error occurred: ${gettable.statusText}`);
+        }
+    } catch (error) {
+        console.error('Error occurred:', error);
+        alert(`Error occurred: ${error.message}`);
+    }
+
+
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <div className="container mt-5">
       <div className="row">
@@ -84,42 +109,22 @@ const Demo = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Subodh Rajput</td>
-                  <td>Mohali</td>
-                  <td>India</td>
-                  <td>Punjab</td>
-                  <td>MCA</td>
-                  <td>Hindu</td>
-                  <td>
-                    <button type="button" className="btn btn-primary btn-sm me-2">Edit</button>
-                    <button type="button" className="btn btn-danger btn-sm">Delete</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Rajat Rajput</td>
-                  <td>Kharar</td>
-                  <td>India</td>
-                  <td>Punjab</td>
-                  <td>MCA</td>
-                  <td>Hindu</td>
-                  <td>
-                    <button type="button" className="btn btn-primary btn-sm me-2">Edit</button>
-                    <button type="button" className="btn btn-danger btn-sm">Delete</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Rajat Rajput</td>
-                  <td>Kharar</td>
-                  <td>India</td>
-                  <td>Punjab</td>
-                  <td>MCA</td>
-                  <td>Hindu</td>
-                  <td>
-                    <button type="button" className="btn btn-primary btn-sm me-2">Edit</button>
-                    <button type="button" className="btn btn-danger btn-sm">Delete</button>
-                  </td>
-                </tr>
+                {
+                  data.map((employee, index) => (
+                    <tr key={index}>
+                      <td>{employee.name}</td>
+                      <td>{employee.Address}</td>
+                      <td>{employee.Country}</td>
+                      <td>{employee.State}</td>
+                      <td>{employee.Qualification}</td>
+                      <td>{employee.Religion}</td>
+                      <td>
+                        <button type="button" className="btn btn-primary btn-sm me-2">Edit</button>
+                        <button type="button" className="btn btn-danger btn-sm">Delete</button>
+                      </td>
+                    </tr>
+                  ))
+                }
               </tbody>
             </table>
           </div>
@@ -127,6 +132,6 @@ const Demo = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Demo;
