@@ -6,20 +6,35 @@ function Demo() {
 
   const getData = async () => {
     try {
-        const gettable = await axios.get('http://localhost:5000/table');
-        if (gettable.status === 200 || gettable.status === 201) {
-            setData(gettable.data);
-            console.log(gettable.data);
-        } else {
-            console.error("Unexpected status code:", gettable.status);
-            alert(`Error occurred: ${gettable.statusText}`);
-        }
+      const gettable = await axios.get('http://localhost:5000/table');
+      if (gettable.status === 200 || gettable.status === 201) {
+        setData(gettable.data);
+        console.log(gettable.data);
+      } else {
+        console.error("Unexpected status code:", gettable.status);
+        alert(`Error occurred: ${gettable.statusText}`);
+      }
     } catch (error) {
-        console.error('Error occurred:', error);
-        alert(`Error occurred: ${error.message}`);
+      console.error('Error occurred:', error);
+      alert(`Error occurred: ${error.message}`);
     }
+  };
 
-
+  const deleteData = async (id) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/table/${id}`);
+      if (response.status === 200) {
+        // Remove the deleted item from the local state
+        setData((prevData) => prevData.filter((item) => item.id !== id));
+        alert('Employee deleted successfully');
+      } else {
+        console.error("Unexpected status code:", response.status);
+        alert(`Error occurred: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error occurred:', error);
+      alert(`Error occurred: ${error.message}`);
+    }
   };
 
   useEffect(() => {
@@ -120,7 +135,7 @@ function Demo() {
                       <td>{employee.Religion}</td>
                       <td>
                         <button type="button" className="btn btn-primary btn-sm me-2">Edit</button>
-                        <button type="button" className="btn btn-danger btn-sm">Delete</button>
+                        <button onClick={() => deleteData(employee.id || employee._id)} type="button" className="btn btn-danger btn-sm">Delete</button>
                       </td>
                     </tr>
                   ))
