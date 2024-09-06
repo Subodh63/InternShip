@@ -291,4 +291,56 @@ router.get("/table", async (req, res) => {
     }
 
 })
+router.patch("/table/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const data = await Table.findByIdAndUpdate(id, req.body);
+        if (data) {
+            res.status(201).json({
+                message: "data updated successfully"
+            });
+        } else {
+            res.status(400).json({
+                error: "error occurs"
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            error: "Server error"
+        });
+    }
+
+})
+router.delete("/table/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const data = await Table.findByIdAndDelete(id);
+        if (data) {
+            res.status(200).json({
+                message: "data deleted successfully"
+            });
+
+        } else {
+            res.status(400).json({
+                error: "error occurs"
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            error: "Server error"
+        });
+    }
+
+})
+router.get("/table/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const data = await Table.findById(id);
+        res.status(200).send(data);
+    } catch (error) {
+        res.status(500).json({
+            error: "server error occurs"
+        });
+    }
+})
 module.exports = router;
