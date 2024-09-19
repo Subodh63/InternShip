@@ -52,7 +52,6 @@ function Demo() {
     setFormData({ ...formData, [name]: value });
   };
 
-
   // Handle checkbox change for qualification
   const handleCheckboxChange = (e) => {
     const { id, checked } = e.target;
@@ -65,27 +64,6 @@ function Demo() {
     });
   };
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Form Data:", formData); // Log form data to check before submission
-    try {
-      const response = await axios.post('http://localhost:5000/table', formData);
-      if (response.status === 200 || response.status === 201) {
-        setData([...data, response.data]); // Add new employee to the list
-        alert('Employee added successfully');
-        setFormData({ name: '', address: '', country: '', state: '', qualification: [], religion: '' }); // Clear form
-      } else {
-        console.error("Unexpected status code:", response.status);
-        alert(`Error occurred: ${response.statusText}`);
-      }
-    } catch (error) {
-      console.error('Error occurred:', error);
-      alert(`Error occurred: ${error.message}`);
-    }
-  };
-  
-
   useEffect(() => {
     getData();
   }, []);
@@ -95,7 +73,8 @@ function Demo() {
       <div className="row">
         {/* Employee Registration Form */}
         <div className="col-lg-4 col-md-6 col-sm-12 mb-4">
-          <form onSubmit={handleSubmit} className="border p-3" style={{ borderColor: "black", backgroundColor: "#f8f9fa" }}>
+          {/* Removed onSubmit from the form to disable submission */}
+          <form className="border p-3" style={{ borderColor: "black", backgroundColor: "#f8f9fa" }}>
             <h4 className="text-center mb-4" style={{ color: "darkblue" }}>
               Employee Registration
             </h4>
@@ -153,7 +132,8 @@ function Demo() {
                 </div>
               </div>
             </div>
-            <button type="submit" className="btn btn-outline-dark w-100">Add Employee</button>
+            {/* The button remains, but it no longer submits anything */}
+            <button type="button" className="btn btn-outline-dark w-100">Add Employee</button>
           </form>
         </div>
 
