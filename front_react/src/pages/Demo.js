@@ -7,11 +7,11 @@ function Demo() {
   // State for form inputs
   const [formData, setFormData] = useState({
     name: '',
-    address: '',
-    country: '',
-    state: '',
-    qualification: [],
-    religion: ''
+    Address: '',
+    Country: '',
+    State: '',
+    Qualification: '',
+    Religion: ''
   });
 
   const getData = async () => {
@@ -36,6 +36,7 @@ function Demo() {
       if (response.status === 200) {
         setData((prevData) => prevData.filter((item) => item.id !== id));
         alert('Employee deleted successfully');
+        getData();
       } else {
         console.error("Unexpected status code:", response.status);
         alert(`Error occurred: ${response.statusText}`);
@@ -52,16 +53,25 @@ function Demo() {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle checkbox change for qualification
-  const handleCheckboxChange = (e) => {
-    const { id, checked } = e.target;
-    setFormData((prev) => {
-      if (checked) {
-        return { ...prev, qualification: [...prev.qualification, id] };
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Form Data:", formData); // Log form data to check before submission
+    try {
+      const response = await axios.post('http://localhost:5000/table', formData);
+      if (response.status === 200 || response.status === 201) {
+        setData([...data, response.data]); // Add new employee to the list
+        alert('Employee added successfully');
+        setFormData({ name: '', Address: '', Country: '', State: '', Qualification: '', Religion: '' }); // Clear form
+        getData();
       } else {
-        return { ...prev, qualification: prev.qualification.filter((q) => q !== id) };
+        console.error("Unexpected status code:", response.status);
+        alert(`Error occurred: ${response.statusText}`);
       }
-    });
+    } catch (error) {
+      console.error('Error occurred:', error);
+      alert(`Error occurred: ${error.message}`);
+    }
   };
 
   useEffect(() => {
@@ -73,8 +83,7 @@ function Demo() {
       <div className="row">
         {/* Employee Registration Form */}
         <div className="col-lg-4 col-md-6 col-sm-12 mb-4">
-          {/* Removed onSubmit from the form to disable submission */}
-          <form className="border p-3" style={{ borderColor: "black", backgroundColor: "#f8f9fa" }}>
+          <form onSubmit={handleSubmit} className="border p-3" style={{ borderColor: "black", backgroundColor: "#f8f9fa" }}>
             <h4 className="text-center mb-4" style={{ color: "darkblue" }}>
               Employee Registration
             </h4>
@@ -84,30 +93,30 @@ function Demo() {
             </div>
             <div className="mb-3">
               <label htmlFor="address" className="form-label" style={{ color: "darkblue" }}>Address</label>
-              <input type="text" className="form-control border border-dark" id="address" name="address" value={formData.address} onChange={handleInputChange} required />
+              <input type="text" className="form-control border border-dark" id="address" name="Address" value={formData.Address} onChange={handleInputChange} required />
             </div>
             <div className="mb-3">
               <label htmlFor="country" className="form-label" style={{ color: "darkblue" }}>Country</label>
-              <input type="text" className="form-control border border-dark" id="country" name="country" value={formData.country} onChange={handleInputChange} required />
+              <input type="text" className="form-control border border-dark" id="country" name="Country" value={formData.Country} onChange={handleInputChange} required />
             </div>
             <div className="mb-3">
               <label htmlFor="state" className="form-label" style={{ color: "darkblue" }}>State</label>
-              <input type="text" className="form-control border border-dark" id="state" name="state" value={formData.state} onChange={handleInputChange} required />
+              <input type="text" className="form-control border border-dark" id="state" name="State" value={formData.State} onChange={handleInputChange} required />
             </div>
             <div className="mb-3">
               <label className="form-label" style={{ color: "darkblue" }}>Qualification</label>
               <div className="d-flex flex-wrap">
                 <div className="form-check me-3">
-                  <input className="form-check-input" type="checkbox" id="bca" onChange={handleCheckboxChange} checked={formData.qualification.includes('bca')} />
-                  <label className="form-check-label" htmlFor="bca" style={{ color: "darkblue" }}>BCA</label>
+                  <input className="form-check-input" type="radio" name="Qualification" id="BCA" value="BCA" checked={formData.Qualification === 'BCA'} onChange={handleInputChange} required />
+                  <label className="form-check-label" htmlFor="BCA" style={{ color: "darkblue" }}>BCA</label>
                 </div>
                 <div className="form-check me-3">
-                  <input className="form-check-input" type="checkbox" id="mca" onChange={handleCheckboxChange} checked={formData.qualification.includes('mca')} />
-                  <label className="form-check-label" htmlFor="mca" style={{ color: "darkblue" }}>MCA</label>
+                  <input className="form-check-input" type="radio" name="Qualification" id="MCA" value="MCA" checked={formData.Qualification === 'MCA'} onChange={handleInputChange} required />
+                  <label className="form-check-label" htmlFor="MCA" style={{ color: "darkblue" }}>MCA</label>
                 </div>
-                <div className="form-check">
-                  <input className="form-check-input" type="checkbox" id="btech" onChange={handleCheckboxChange} checked={formData.qualification.includes('btech')} />
-                  <label className="form-check-label" htmlFor="btech" style={{ color: "darkblue" }}>B.Tech</label>
+                <div className="form-check me-3">
+                  <input className="form-check-input" type="radio" name="Qualification" id="btech" value="Btech" checked={formData.Qualification === 'Btech'} onChange={handleInputChange} required />
+                  <label className="form-check-label" htmlFor="btech" style={{ color: "darkblue" }}>Btech</label>
                 </div>
               </div>
             </div>
@@ -115,25 +124,24 @@ function Demo() {
               <label className="form-label" style={{ color: "darkblue" }}>Religion</label>
               <div className="d-flex flex-wrap">
                 <div className="form-check me-3">
-                  <input className="form-check-input" type="radio" name="religion" id="hindu" value="Hindu" checked={formData.religion === 'Hindu'} onChange={handleInputChange} required />
+                  <input className="form-check-input" type="radio" name="Religion" id="hindu" value="Hindu" checked={formData.Religion === 'Hindu'} onChange={handleInputChange} required />
                   <label className="form-check-label" htmlFor="hindu" style={{ color: "darkblue" }}>Hindu</label>
                 </div>
                 <div className="form-check me-3">
-                  <input className="form-check-input" type="radio" name="religion" id="muslim" value="Muslim" checked={formData.religion === 'Muslim'} onChange={handleInputChange} required />
+                  <input className="form-check-input" type="radio" name="Religion" id="muslim" value="Muslim" checked={formData.Religion === 'Muslim'} onChange={handleInputChange} required />
                   <label className="form-check-label" htmlFor="muslim" style={{ color: "darkblue" }}>Muslim</label>
                 </div>
                 <div className="form-check me-3">
-                  <input className="form-check-input" type="radio" name="religion" id="sikh" value="Sikh" checked={formData.religion === 'Sikh'} onChange={handleInputChange} required />
+                  <input className="form-check-input" type="radio" name="Religion" id="sikh" value="Sikh" checked={formData.Religion === 'Sikh'} onChange={handleInputChange} required />
                   <label className="form-check-label" htmlFor="sikh" style={{ color: "darkblue" }}>Sikh</label>
                 </div>
                 <div className="form-check">
-                  <input className="form-check-input" type="radio" name="religion" id="christian" value="Christian" checked={formData.religion === 'Christian'} onChange={handleInputChange} required />
+                  <input className="form-check-input" type="radio" name="Religion" id="christian" value="Christian" checked={formData.Religion === 'Christian'} onChange={handleInputChange} required />
                   <label className="form-check-label" htmlFor="christian" style={{ color: "darkblue" }}>Christian</label>
                 </div>
               </div>
             </div>
-            {/* The button remains, but it no longer submits anything */}
-            <button type="button" className="btn btn-outline-dark w-100">Add Employee</button>
+            <button type="submit" className="btn btn-outline-dark w-100">Add Employee</button>
           </form>
         </div>
 
