@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function Demo() {
   const [data, setData] = useState([]);
@@ -46,6 +47,8 @@ function Demo() {
       alert(`Error occurred: ${error.message}`);
     }
   };
+ 
+  
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -171,7 +174,8 @@ function Demo() {
                       <td>{employee.Qualification}</td>
                       <td>{employee.Religion}</td>
                       <td>
-                        <button type="button" className="btn btn-primary btn-sm me-2">Edit</button>
+
+                      <Link to={`/Edit/${employee._id}`} className='btn btn-primary btn-sm'>Edit</Link>
                         <button onClick={() => deleteData(employee.id || employee._id)} type="button" className="btn btn-danger btn-sm">Delete</button>
                       </td>
                     </tr>

@@ -6,6 +6,8 @@ import Blogs from "./pages/Blogs";
 import Contact from "./pages/Contact";
 import Demo from "./pages/Demo";
 
+import EditPage from "./pages/Edit/[EditPage]";
+
 
 export default function App() {
   return (
@@ -16,6 +18,7 @@ export default function App() {
           <Route path="blogs" element={<Blogs />} />
           <Route path="contact" element={<Contact />} />
           <Route path="demo" element={<Demo />} />
+          <Route path="Edit/:id" element={<EditPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
