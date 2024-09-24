@@ -343,5 +343,37 @@ router.get("/table/:id", async (req, res) => {
         });
     }
 })
+router.put('/table/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, Address, Country, State, Qualification, Religion } = req.body;
 
+    try {
+        // Find the employee in the "table" collection by ID
+        const tableData = await Table.findById(id);
+
+        // Check if the record exists
+        if (!tableData) {
+            return res.status(404).json({ message: 'Record not found' });
+        }
+
+        // Update the record fields
+        tableData.name = name || tableData.name;
+        tableData.Address = Address || tableData.Address;
+        tableData.Country = Country || tableData.Country;
+        tableData.State = State || tableData.State;
+        tableData.Qualification = Qualification || tableData.Qualification;
+        tableData.Religion = Religion || tableData.Religion;
+
+        // Save the updated record
+        const updatedTableData = await tableData.save();
+        
+        res.status(200).json(updatedTableData);  // Send the updated record data as a response
+    } catch (error) {
+        console.error('Error occurred while updating record:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+module.exports = router;
+  
 module.exports = router;
