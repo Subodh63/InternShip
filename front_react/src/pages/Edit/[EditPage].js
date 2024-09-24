@@ -31,12 +31,12 @@ const EditPage = () => {
   // Update employee function
   const update = async () => {
     try {
-      const response = await axios.put(`http://localhost:5000/table/${id}`, formData);
+      const response = await axios.patch(`http://localhost:5000/table/${id}`, formData);
       if (response.status === 200) {
         alert('Employee updated successfully');
         // Redirect to main table after successful update
         navigate('/Demo');  // Redirect to main table page
-      } else {
+      } else {  
         alert('Error occurred while updating');
       }
     } catch (error) {

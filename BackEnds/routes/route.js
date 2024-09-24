@@ -291,26 +291,26 @@ router.get("/table", async (req, res) => {
     }
 
 })
-router.patch("/table/:id", async (req, res) => {
-    try {
-        const id = req.params.id;
-        const data = await Table.findByIdAndUpdate(id, req.body);
-        if (data) {
-            res.status(201).json({
-                message: "data updated successfully"
-            });
-        } else {
-            res.status(400).json({
-                error: "error occurs"
-            });
-        }
-    } catch (error) {
-        res.status(500).json({
-            error: "Server error"
-        });
-    }
+// router.patch("/table/:id", async (req, res) => {
+//     try {
+//         const id = req.params.id;
+//         const data = await Table.findByIdAndUpdate(id, req.body);
+//         if (data) {
+//             res.status(201).json({
+//                 message: "data updated successfully"
+//             });
+//         } else {
+//             res.status(400).json({
+//                 error: "error occurs"
+//             });
+//         }
+//     } catch (error) {
+//         res.status(500).json({
+//             error: "Server error"
+//         });
+//     }
 
-})
+// })
 router.delete("/table/:id", async (req, res) => {
     try {
         const id = req.params.id;
@@ -343,37 +343,64 @@ router.get("/table/:id", async (req, res) => {
         });
     }
 })
-router.put('/table/:id', async (req, res) => {
-    const { id } = req.params;
-    const { name, Address, Country, State, Qualification, Religion } = req.body;
+// router.patch('/table/:id', async (req, res) => {
+//     const { id } = req.params;
+//     const { name, Address, Country, State, Qualification, Religion } = req.body;
 
-    try {
-        // Find the employee in the "table" collection by ID
-        const tableData = await Table.findById(id);
+//     try {
+//         // Find the employee in the "table" collection by ID
+//         const tableData = await Table.findById(id);
 
-        // Check if the record exists
-        if (!tableData) {
-            return res.status(404).json({ message: 'Record not found' });
-        }
+//         // Check if the record exists
+//         if (!tableData) {
+//             return res.status(404).json({ message: 'Record not found' });
+//         }
 
-        // Update the record fields
-        tableData.name = name || tableData.name;
-        tableData.Address = Address || tableData.Address;
-        tableData.Country = Country || tableData.Country;
-        tableData.State = State || tableData.State;
-        tableData.Qualification = Qualification || tableData.Qualification;
-        tableData.Religion = Religion || tableData.Religion;
+//         // Update the record fields
+//         tableData.name = name || tableData.name;
+//         tableData.Address = Address || tableData.Address;
+//         tableData.Country = Country || tableData.Country;
+//         tableData.State = State || tableData.State;
+//         tableData.Qualification = Qualification || tableData.Qualification;
+//         tableData.Religion = Religion || tableData.Religion;
 
-        // Save the updated record
-        const updatedTableData = await tableData.save();
+//         // Save the updated record
+//         const updatedTableData = await tableData.save();
         
-        res.status(200).json(updatedTableData);  // Send the updated record data as a response
+//         res.status(200).json(updatedTableData);  // Send the updated record data as a response
+//     } catch (error) {
+//         console.error('Error occurred while updating record:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// });
+
+router.patch("/table/:id", async (req, res) => {
+    try {
+        const id = req.params.id; 
+        
+        // Find and update the document, returning the updated document
+        const data = await Table.findByIdAndUpdate(id, req.body, { new: true });
+        
+        if (data) {
+            // Successful update, return the updated data
+            res.status(200).json({
+                message: "Data updated successfully",
+                data: data // Optionally return updated data
+            });
+        } else {
+            // If no document is found
+            res.status(404).json({
+                error: "Data not found"
+            });
+        }
     } catch (error) {
-        console.error('Error occurred while updating record:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        // Handle server error
+        res.status(500).json({
+            error: "Server error",
+            details: error.message // Optionally provide error details
+        });
     }
 });
 
-module.exports = router;
   
 module.exports = router;
